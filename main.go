@@ -28,7 +28,7 @@ func newPage(blocksize int) Page {
 }
 
 func newPageFromBytes(b []byte) Page {
-	return Page{buf: b} // TODO?
+	return Page{buf: b}
 }
 
 func byteSliceToInt32(bs [int32size]byte) int32 {
@@ -96,7 +96,7 @@ type FileManager struct {
 }
 
 func newFileManager(dir string, blocksize int) FileManager {
-	// Open directory, possubly creating it if it doesn't exist
+	// Open directory, possibly creating it if it doesn't exist
 	directory, err := os.Open(dir)
 	if err != nil && errors.Is(err, os.ErrNotExist) {
 		err := os.Mkdir(dir, os.ModePerm)
@@ -105,7 +105,7 @@ func newFileManager(dir string, blocksize int) FileManager {
 				panic(err)
 			}
 		}
-		// Open the directory again, since it's nil right now
+		// Actually open the directory after creating
 		directory, _ = os.Open(dir)
 		return FileManager{
 			directory: directory,
@@ -119,7 +119,7 @@ func newFileManager(dir string, blocksize int) FileManager {
 	return FileManager{
 		directory: directory,
 		blocksize: blocksize,
-		files:     make(map[string]*os.File, 0),
+		files:     make(map[string]*os.File),
 	}
 }
 
@@ -132,7 +132,7 @@ func (fm *FileManager) read(blk BlockID, p Page) {
 		panic(err)
 	}
 	if bytesRead != len(p.buf) {
-		panic("mismatch in bytes read?")
+		panic("mismatch in bytes read")
 	}
 }
 
